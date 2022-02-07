@@ -19,9 +19,11 @@ import java.net.Socket;
 
 public class WebServer
 {
-	private ServerSocket	socket;
+	private static final int DEFAULT_PORT_ID = 8080;
 
-	private boolean				running;
+	private ServerSocket socket;
+
+	private boolean running;
 
 	/**
 	 * Constructor
@@ -44,6 +46,7 @@ public class WebServer
 		WebWorker worker;
 		try
 		{
+			// listen for incoming connection
 			socket = new ServerSocket(port);
 		}
 		catch (Exception e)
@@ -84,7 +87,8 @@ public class WebServer
 	 **/
 	public static void main(String args[])
 	{
-		int port = 8080;
+		int port = WebServer.DEFAULT_PORT_ID;
+		
 		if (args.length > 1)
 		{
 			System.err.println("Usage: java Webserver <portNumber>");
@@ -96,9 +100,10 @@ public class WebServer
 			{
 				port = Integer.parseInt(args[0]);
 			}
-			catch (Exception e)
+			catch (NumberFormatException e)
 			{
-				System.err.println("Argument must be an int (" + e + ")");
+				System.err.println("Argument must be an int (" + args[0]+ "):");
+				e.printStackTrace();
 				return;
 			}
 		}
