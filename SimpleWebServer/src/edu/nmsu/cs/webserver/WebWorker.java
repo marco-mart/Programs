@@ -22,16 +22,21 @@ package edu.nmsu.cs.webserver;
  **/
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.io.Writer;
 import java.net.Socket;
 import java.text.DateFormat;
 import java.util.Date;
 import java.util.TimeZone;
+import java.util.Scanner;
 
 public class WebWorker implements Runnable
 {
@@ -58,10 +63,6 @@ public class WebWorker implements Runnable
 		{
 			InputStream is = socket.getInputStream();
 			OutputStream os = socket.getOutputStream();
-			/*
-			 * To load file you will have to use a FileInputStream object,
-			 * it has an argument of a string
-			 */
 			readHTTPRequest(is);
 			writeHTTPHeader(os, "text/html");
 			writeContent(os);
@@ -82,7 +83,11 @@ public class WebWorker implements Runnable
 	private void readHTTPRequest(InputStream is)
 	{
 		String line;
+		// will hold all request lines
+		String requestlines = "";
 		BufferedReader r = new BufferedReader(new InputStreamReader(is));
+		// will hold individual request lines
+		String[] requestLinesParsed;
 		while (true)
 		{
 			try
@@ -93,6 +98,7 @@ public class WebWorker implements Runnable
 				System.err.println("Request line: (" + line + ")");
 				if (line.length() == 0)
 					break;
+				requestlines += line + "\n";
 			}
 			catch (Exception e)
 			{
@@ -100,6 +106,37 @@ public class WebWorker implements Runnable
 				break;
 			}
 		}
+		
+		// testing purposes
+		System.out.println(requestlines);
+		requestLinesParsed = requestlines.split("\n");
+		
+		for (int i = 0; i < requestLinesParsed.length; i++) {
+			System.out.println(i + " " + requestLinesParsed[i]);
+		}
+		
+		// we now have each individual line in a String array
+		// now we want to look at GET requests
+		String[] individualLineParsed;
+		File requestFile = null;
+		for (int i = 0; i < requestLinesParsed.length; i++) {
+			individualLineParsed = requestLinesParsed[i].split(" ");
+			
+			if (individualLineParsed[0].equals("GET")) {
+				// check next token if valid file
+				requestFile = new File(individualLineParsed[1].substring(1));
+				if (requestFile.exists()) {
+					System.out.println("\nFILE EXISTS\n");
+					// write its contents
+					// send back 200 ok
+				}
+				else {
+					System.out.println("\nFILE DOESN'T EXIST\n");
+					// send back 404 not found
+				}
+			}
+		}
+		
 		return;
 	}
 
