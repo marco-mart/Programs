@@ -34,6 +34,8 @@ import java.io.OutputStream;
 import java.io.Writer;
 import java.net.Socket;
 import java.text.DateFormat;
+import java.time.LocalDate;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
 import java.util.Scanner;
@@ -63,9 +65,15 @@ public class WebWorker implements Runnable
 		{
 			InputStream is = socket.getInputStream();
 			OutputStream os = socket.getOutputStream();
-			readHTTPRequest(is);
+			File request = readHTTPRequest(is);
+			// TODO:
 			writeHTTPHeader(os, "text/html");
-			writeContent(os);
+			if (request != null) {
+				writeContent(os, request);
+			}
+			else {
+				writeContent(os, null);
+			}
 			os.flush();
 			socket.close();
 		}
@@ -80,7 +88,7 @@ public class WebWorker implements Runnable
 	/**
 	 * Read the HTTP request header.
 	 **/
-	private void readHTTPRequest(InputStream is)
+	private File readHTTPRequest(InputStream is)
 	{
 		String line;
 		// will hold all request lines
@@ -127,17 +135,12 @@ public class WebWorker implements Runnable
 				requestFile = new File(individualLineParsed[1].substring(1));
 				if (requestFile.exists()) {
 					System.out.println("\nFILE EXISTS\n");
-					// write its contents
-					// send back 200 ok
-				}
-				else {
-					System.out.println("\nFILE DOESN'T EXIST\n");
-					// send back 404 not found
+					return requestFile;
 				}
 			}
 		}
-		
-		return;
+		System.out.println("\nFILE DOESN'T EXIST\n");
+		return null;
 	}
 
 	/**
@@ -174,10 +177,34 @@ public class WebWorker implements Runnable
 	 * @param os
 	 *          is the OutputStream object to write to
 	 **/
-	private void writeContent(OutputStream os) throws Exception
+	private void writeContent(OutputStream os, File requestFile) throws Exception
 	{
 		os.write("<html><head></head><body>\n".getBytes());
-		os.write("<h3>My web server works!</h3>\n".getBytes());
+		if (requestFile == null) {
+			// default text
+			os.write("<h3>My web server works!</h3>\n".getBytes());
+		}
+		else {
+			// write file's contents to output stream
+			Scanner scan = new Scanner(requestFile);
+			
+			while (scan.hasNextLine()) {
+				
+				String line = scan.nextLine();
+				
+				if (line.contains("<cs371date>")) {
+					LocalDate date = LocalDate.now();
+					line = line.replaceAll("<cs371date>", date.toString());
+				}
+				if (line.contains("<cs371server>")) {
+					line = line.replaceAll("<cs371server>", "Marco's Server");
+				}
+				
+				os.write(line.getBytes());
+			}
+			
+			scan.close();
+		}
 		os.write("</body></html>\n".getBytes());
 	}
 
