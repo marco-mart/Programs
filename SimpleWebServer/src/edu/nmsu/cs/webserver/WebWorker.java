@@ -67,7 +67,7 @@ public class WebWorker implements Runnable
 			OutputStream os = socket.getOutputStream();
 			File request = readHTTPRequest(is);
 			// TODO:
-			writeHTTPHeader(os, "text/html");
+			writeHTTPHeader(os, "text/html", request);
 			if (request != null) {
 				writeContent(os, request);
 			}
@@ -92,10 +92,8 @@ public class WebWorker implements Runnable
 	{
 		String line;
 		// will hold all request lines
-		String requestlines = "";
+		String request = null;
 		BufferedReader r = new BufferedReader(new InputStreamReader(is));
-		// will hold individual request lines
-		String[] requestLinesParsed;
 		while (true)
 		{
 			try
@@ -106,7 +104,9 @@ public class WebWorker implements Runnable
 				System.err.println("Request line: (" + line + ")");
 				if (line.length() == 0)
 					break;
-				requestlines += line + "\n";
+				if (request == null) {
+					request = line;
+				}
 			}
 			catch (Exception e)
 			{
@@ -116,30 +116,23 @@ public class WebWorker implements Runnable
 		}
 		
 		// testing purposes
-		System.out.println(requestlines);
-		requestLinesParsed = requestlines.split("\n");
+		System.out.println(request);
 		
-		for (int i = 0; i < requestLinesParsed.length; i++) {
-			System.out.println(i + " " + requestLinesParsed[i]);
-		}
-		
-		// we now have each individual line in a String array
-		// now we want to look at GET requests
-		String[] individualLineParsed;
+		String[] requestParsed = request.split(" ");
 		File requestFile = null;
-		for (int i = 0; i < requestLinesParsed.length; i++) {
-			individualLineParsed = requestLinesParsed[i].split(" ");
-			
-			if (individualLineParsed[0].equals("GET")) {
-				// check next token if valid file
-				requestFile = new File(individualLineParsed[1].substring(1));
-				if (requestFile.exists()) {
-					System.out.println("\nFILE EXISTS\n");
-					return requestFile;
-				}
+
+		// check request
+		if (requestParsed[0].equals("GET")) {
+			// first char is a '/'
+			requestFile = new File(requestParsed[1].substring(1));
+			// check if file exists
+			if (requestFile.exists()) {
+				System.out.println("\nFILE EXISTS\n");
+				return requestFile;
 			}
 		}
-		System.out.println("\nFILE DOESN'T EXIST\n");
+		// file does not exist 
+		System.out.println("\nFILE DOES NOT EXIST\n");
 		return null;
 	}
 
@@ -151,12 +144,17 @@ public class WebWorker implements Runnable
 	 * @param contentType
 	 *          is the string MIME content type (e.g. "text/html")
 	 **/
-	private void writeHTTPHeader(OutputStream os, String contentType) throws Exception
+	private void writeHTTPHeader(OutputStream os, String contentType, File request) throws Exception
 	{
 		Date d = new Date();
 		DateFormat df = DateFormat.getDateTimeInstance();
 		df.setTimeZone(TimeZone.getTimeZone("GMT"));
-		os.write("HTTP/1.1 200 OK\n".getBytes());
+		if (request != null) {
+			os.write("HTTP/1.1 200 OK\n".getBytes());
+		}
+		else {
+			os.write("HTTP/1.1 404 NOT FOUND\n".getBytes());
+		}
 		os.write("Date: ".getBytes());
 		os.write((df.format(d)).getBytes());
 		os.write("\n".getBytes());
