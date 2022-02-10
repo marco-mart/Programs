@@ -35,7 +35,6 @@ import java.io.Writer;
 import java.net.Socket;
 import java.text.DateFormat;
 import java.time.LocalDate;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
 import java.util.Scanner;
@@ -180,7 +179,7 @@ public class WebWorker implements Runnable
 		os.write("<html><head></head><body>\n".getBytes());
 		if (requestFile == null) {
 			// default text
-			os.write("<h3>My web server works!</h3>\n".getBytes());
+			os.write("<h3>404 Not Found</h3>\n".getBytes());
 		}
 		else {
 			// write file's contents to output stream
