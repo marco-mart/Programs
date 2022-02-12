@@ -43,6 +43,7 @@ public class WebWorker implements Runnable
 {
 
 	private Socket socket;
+	private boolean defaultPage = false;
 
 	/**
 	 * Constructor: must have a valid open socket
@@ -65,14 +66,8 @@ public class WebWorker implements Runnable
 			InputStream is = socket.getInputStream();
 			OutputStream os = socket.getOutputStream();
 			File request = readHTTPRequest(is);
-			// TODO:
 			writeHTTPHeader(os, "text/html", request);
-			if (request != null) {
-				writeContent(os, request);
-			}
-			else {
-				writeContent(os, null);
-			}
+			writeContent(os, request);
 			os.flush();
 			socket.close();
 		}
@@ -114,9 +109,6 @@ public class WebWorker implements Runnable
 			}
 		}
 		
-		// testing purposes
-		System.out.println(request);
-		
 		String[] requestParsed = request.split(" ");
 		File requestFile = null;
 
@@ -124,14 +116,16 @@ public class WebWorker implements Runnable
 		if (requestParsed[0].equals("GET")) {
 			// first char is a '/'
 			requestFile = new File(requestParsed[1].substring(1));
-			// check if file exists
-			if (requestFile.exists()) {
-				System.out.println("\nFILE EXISTS\n");
+			// check if file exists and is not a directory
+			if (requestFile.exists() && !requestFile.isDirectory()) {
 				return requestFile;
+			}
+			// check if default page
+			else if (requestParsed[1].equals("/")) {
+				defaultPage = true;
 			}
 		}
 		// file does not exist 
-		System.out.println("\nFILE DOES NOT EXIST\n");
 		return null;
 	}
 
@@ -148,11 +142,12 @@ public class WebWorker implements Runnable
 		Date d = new Date();
 		DateFormat df = DateFormat.getDateTimeInstance();
 		df.setTimeZone(TimeZone.getTimeZone("GMT"));
-		if (request != null) {
+		// check request/default page
+		if (request != null || defaultPage) {
 			os.write("HTTP/1.1 200 OK\n".getBytes());
 		}
 		else {
-			os.write("HTTP/1.1 404 NOT FOUND\n".getBytes());
+			os.write("HTTP/1.1 404 Not Found\n".getBytes());
 		}
 		os.write("Date: ".getBytes());
 		os.write((df.format(d)).getBytes());
@@ -177,9 +172,14 @@ public class WebWorker implements Runnable
 	private void writeContent(OutputStream os, File requestFile) throws Exception
 	{
 		os.write("<html><head></head><body>\n".getBytes());
-		if (requestFile == null) {
+		if (requestFile == null && !defaultPage) {
 			// default text
 			os.write("<h3>404 Not Found</h3>\n".getBytes());
+		}
+		else if (defaultPage) {
+			os.write("<html><head></head><body>\n".getBytes());
+			os.write("<h3>My web server works!</h3>\n".getBytes());
+			os.write("</body></html>\n".getBytes());
 		}
 		else {
 			// write file's contents to output stream
