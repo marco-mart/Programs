@@ -1,7 +1,7 @@
 <project name="SimpleWebServer" basedir=".">
 	
 <description>
-	
+Simple Web Server ant build file	
 </description>
 	
 	<property name="src" location="src"/>
