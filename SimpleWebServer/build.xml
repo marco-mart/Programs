@@ -9,6 +9,7 @@
   <target name="compile"
         description="compile the source">
     <!-- Compile the Java code from ${src} into ${bin} -->
+  	<mkdir dir="bin"/>
     <javac srcdir="${src}" destdir="${bin}"/>
   </target>
 
