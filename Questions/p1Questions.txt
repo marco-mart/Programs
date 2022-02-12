@@ -1,0 +1,10 @@
+1. Estimate the time it will take you to do the assignment, to within a quarter-hour: 4 hours
+
+2. Estimate the time it took you to complete the assignment, broken down as:
+	- thought/design: 4 hours. I did not even know what a Web Server was
+			  before beginning this assignment, let alone building one.
+			  I watched a lot of YouTube vids on Web Servers.
+	- Programming: 3 hours. Once having learned all of the context, programming it wasn't that bad.
+	- Debugging: 1 hour. 
+	- TOTAL: 8 hours.
+3. To within what percent accuracy was your original estimate: 50%

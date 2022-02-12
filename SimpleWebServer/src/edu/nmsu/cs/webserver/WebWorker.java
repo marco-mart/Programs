@@ -146,6 +146,7 @@ public class WebWorker implements Runnable
 		if (request != null || defaultPage) {
 			os.write("HTTP/1.1 200 OK\n".getBytes());
 		}
+		// file not found
 		else {
 			os.write("HTTP/1.1 404 Not Found\n".getBytes());
 		}
@@ -173,13 +174,12 @@ public class WebWorker implements Runnable
 	{
 		os.write("<html><head></head><body>\n".getBytes());
 		if (requestFile == null && !defaultPage) {
-			// default text
+			// file not found
 			os.write("<h3>404 Not Found</h3>\n".getBytes());
 		}
 		else if (defaultPage) {
-			os.write("<html><head></head><body>\n".getBytes());
+			// default text
 			os.write("<h3>My web server works!</h3>\n".getBytes());
-			os.write("</body></html>\n".getBytes());
 		}
 		else {
 			// write file's contents to output stream
