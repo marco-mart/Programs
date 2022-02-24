@@ -1,5 +1,8 @@
 package edu.nmsu.cs.webserver;
 
+import java.awt.Image;
+import java.awt.image.BufferedImage;
+
 /**
  * Web worker: an object of this class executes in its own new thread to receive and respond to a
  * single HTTP request. After the constructor the object executes on its "run" method, and leaves
@@ -23,6 +26,7 @@ package edu.nmsu.cs.webserver;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -33,10 +37,14 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.Writer;
 import java.net.Socket;
+import java.nio.file.Files;
 import java.text.DateFormat;
 import java.time.LocalDate;
 import java.util.Date;
 import java.util.TimeZone;
+
+import javax.imageio.ImageIO;
+
 import java.util.Scanner;
 
 public class WebWorker implements Runnable
@@ -66,8 +74,10 @@ public class WebWorker implements Runnable
 			InputStream is = socket.getInputStream();
 			OutputStream os = socket.getOutputStream();
 			File request = readHTTPRequest(is);
-			writeHTTPHeader(os, "text/html", request);
-			writeContent(os, request);
+			// check request's content type
+			String contentType = checkContentType(request);
+			writeHTTPHeader(os, contentType, request);
+			writeContent(os, contentType, request);
 			os.flush();
 			socket.close();
 		}
@@ -170,18 +180,22 @@ public class WebWorker implements Runnable
 	 * @param os
 	 *          is the OutputStream object to write to
 	 **/
-	private void writeContent(OutputStream os, File requestFile) throws Exception
+	private void writeContent(OutputStream os, String contentType, File requestFile) throws Exception
 	{
 		os.write("<html><head></head><body>\n".getBytes());
-		if (requestFile == null && !defaultPage) {
+		if (requestFile == null && !defaultPage) 
+		{
 			// file not found
 			os.write("<h3>404 Not Found</h3>\n".getBytes());
 		}
-		else if (defaultPage) {
+		else if (defaultPage) 
+		{
 			// default text
 			os.write("<h3>My web server works!</h3>\n".getBytes());
 		}
-		else {
+		// text file
+		else if (contentType.equals("text/html"))
+		{
 			// write file's contents to output stream
 			Scanner scan = new Scanner(requestFile);
 			
@@ -202,7 +216,45 @@ public class WebWorker implements Runnable
 			
 			scan.close();
 		}
+		// picture or gif
+		else if (contentType.equals("image/gif") ||
+				 contentType.equals("image/png") ||
+				 contentType.equals("image/jpeg")) 
+		{
+			// convert image/gif to byte array for output stream
+			System.out.println("\nFile path: " + requestFile.getAbsolutePath() + "\n");
+			System.out.println("File: " + requestFile.toString());
+			System.out.println("Can read: " + requestFile.canRead());
+			byte[] imageToBytes = Files.readAllBytes(requestFile.toPath());
+			os.write(imageToBytes);
+		}
 		os.write("</body></html>\n".getBytes());
+	}
+	/**
+	 * Check's files content type
+	 * @param request: the requested file
+	 * @return the file's content type
+	 */
+	private static String checkContentType(File request) {
+		
+		if (request == null) {
+			// return default
+			return "text/html";
+		}
+		String filename = request.getName();
+		
+		if (filename.endsWith(".gif")) {
+			return "image/gif";
+		}
+		if (filename.endsWith(".jpeg")) {
+			return "image/jpeg";
+		}
+		if (filename.endsWith(".png")) {
+			return "image/png";
+		}
+		
+		// return default
+		return "text/html";
 	}
 
 } // end class
