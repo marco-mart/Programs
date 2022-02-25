@@ -130,9 +130,6 @@ public class WebWorker implements Runnable
 			requestFile = new File(requestParsed[1].substring(1));
 			// check if file exists and is not a directory
 			if (requestFile.exists() && !requestFile.isDirectory()) {
-				System.out.println("\n\nFile exists!");
-				System.out.println("\n\nFile:*" + requestFile.toString() + "*\n\n");
-				System.out.println("\n\nFile path: *" + requestFile.getAbsolutePath() + "*\n\n");
 				return requestFile;
 			}
 			// check if default page
