@@ -76,8 +76,6 @@ public class WebWorker implements Runnable
 			OutputStream os = socket.getOutputStream();
 			
 			File request = readHTTPRequest(is);
-			System.out.println("\n\nFile: *" +request.toString() + "*\n\n");
-			System.out.println("\n\nFile path: *" + request.getAbsolutePath() + "*\n\n");
 			// check request's content type
 			String contentType = checkContentType(request);
 			writeHTTPHeader(os, contentType, request);
