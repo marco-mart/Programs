@@ -168,7 +168,6 @@ public class WebWorker implements Runnable
 		os.write("Server: Marco's very own server\n".getBytes());
 		os.write("Connection: close\n".getBytes());
 		os.write("Content-Type: ".getBytes());
-		System.out.println(contentType);
 		os.write(contentType.getBytes());
 		os.write("\n\n".getBytes()); // HTTP header ends with 2 newlines
 		return;
@@ -186,19 +185,20 @@ public class WebWorker implements Runnable
 		if (requestFile == null && !defaultPage) 
 		{
 			// file not found
-			os.write("<html><head></head><body>\n".getBytes());
+			os.write("<html><title>404 Not Found</title><head></head><body>\n".getBytes());
 			os.write("<h3>404 Not Found</h3>\n".getBytes());
 			os.write("</body></html>\n".getBytes());
 		}
 		else if (defaultPage) 
 		{
 			// default text
+			os.write("<title>Welcome</title>".getBytes());
 			os.write("<h3>My web server works!</h3>\n".getBytes());
 		}
 		// text file
 		else if (contentType.equals("text/html"))
 		{
-			os.write("<html><head></head><body>\n".getBytes());
+			os.write("<html><title>Welcome</title><head></head><body>\n".getBytes());
 			// write file's contents to output stream
 			Scanner scan = new Scanner(requestFile);
 			
@@ -225,9 +225,6 @@ public class WebWorker implements Runnable
 				 contentType.equals("image/jpeg")) 
 		{
 			// convert image/gif to byte array for output stream
-			System.out.println("\nFile path: " + requestFile.getAbsolutePath() + "\n");
-			System.out.println("File: " + requestFile.toString());
-
 			byte[] imageToBytes = Files.readAllBytes(requestFile.toPath());
 			os.write(imageToBytes);	
 		}
@@ -248,7 +245,8 @@ public class WebWorker implements Runnable
 		if (filename.endsWith(".gif")) {
 			return "image/gif";
 		}
-		if (filename.endsWith(".jpeg")) {
+		if (filename.endsWith(".jpeg") ||
+			filename.endsWith(".jpg")) {
 			return "image/jpeg";
 		}
 		if (filename.endsWith(".png")) {
