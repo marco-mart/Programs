@@ -47,7 +47,8 @@ public class RacingScore2
 			s1 = score1;
 			s2 = score2;
 		}
-		else if (score3 < score1 && score3 < score2)
+		// change s3 < s2 to s1 < s2 cause otherwise it is unreachable
+		else if (score3 < score1 && score1 < score2)
 		{
 			s1 = score1;
 			s2 = score2;
@@ -64,7 +65,8 @@ public class RacingScore2
 	public static void main(String args[])
 	{
 		int s1, s2, s3;
-		if (args == null || args.length != 3)
+		// args will never be null so get rid of it
+		if (args.length != 3)
 		{
 			System.err.println("Error: must supply three arguments!");
 			return;
