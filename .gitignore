@@ -14,8 +14,10 @@
 # Mobile Tools for Java (J2ME)
 .mtj.tmp/
 
-# Package Files #
-*.jar
+# Package Files
+
+# Let .jar files in for P3 grading (Jacoco can't run without them)
+# *.jar
 *.war
 *.nar
 *.ear
