@@ -5,6 +5,7 @@ public class Circle2 extends Circle
 
 	public Circle2(double x, double y, double radius)
 	{
+		// X AND Y ARE NOT IN THEIR CORRECT PLACE
 		super(y, x, radius);
 	}
 

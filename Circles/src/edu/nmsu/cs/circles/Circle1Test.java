@@ -35,6 +35,75 @@ public class Circle1Test
 		System.out.println("\nTest finished.");
 	}
 
+	
+	//
+	// Tests that two circles that are not intersecting are not intersecting
+	//
+	@Test
+	public void intersectNoIntersection() {
+		
+		System.out.println("Running test: intersectNoIntersection.");
+		
+		// next to eachother same x
+		System.out.println("intersectNoIntersection - next to eachother");
+		Circle1 a = new Circle1(0, 50, 10);
+		Circle1 b = new Circle1(0, 0, 5);
+		
+		Assert.assertFalse(a.intersects(b));
+		Assert.assertFalse(b.intersects(a));
+		
+		// one above the other, almost touching
+		System.out.println("intersectNoIntersection - one above, almost touching");
+		a = new Circle1(1, 10, 2.99);
+		b = new Circle1(1, 5, 2);
+		
+		Assert.assertFalse(a.intersects(b));
+		Assert.assertFalse(b.intersects(a));
+		
+		// circle above to the right
+		System.out.println("intersectNoIntersection - above to the right, very close");
+		a = new Circle1(16, 128, 4);
+		b = new Circle1(23.45, 121.6, 5);
+		
+		Assert.assertFalse(a.intersects(b));
+		Assert.assertFalse(b.intersects(a));
+		
+	} // end noIntersection
+	
+	//
+	// Tests that two circles that are comepletely overlapping are intersecting
+	//
+	@Test
+	public void intersectCompleteOverlap() {
+		
+		System.out.println("Running test: intersectCompleteOverlap.");
+		
+		// next to eachother same x
+		System.out.println("intersectCompleteOverlap - at origin");
+		Circle1 a = new Circle1(0, 0, 3);
+		Circle1 b = new Circle1(7, 0, 4);
+		
+		Assert.assertTrue(a.intersects(b));
+		Assert.assertTrue(b.intersects(a));
+	}
+	
+	//
+	// Tests two circles that are intersecting at a single point are intersecting
+	//
+	@Test
+	public void intersectAtOnePoint() {
+		
+		System.out.println("Running test: intersectAtOnePoint.");
+		
+		// next to eachother same x
+		System.out.println("intersectAtOnePoint - on x-axis");
+		Circle1 a = new Circle1(0, 0, 3);
+		Circle1 b = new Circle1(0, 0, 5);
+		
+		Assert.assertTrue(a.intersects(b));
+		Assert.assertTrue(b.intersects(a));
+	}
+	
 	//
 	// Test a simple positive move
 	//
