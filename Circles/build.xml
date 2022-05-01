@@ -64,5 +64,5 @@
         </java>
 	</target>
 
-	<target name = "test" depends = "testCircle1, testCircle2"/>
+	<target name = "test" depends = "testCircle1, testCircle2" description = "Tests Circle1 and Circle2"/>
 </project>

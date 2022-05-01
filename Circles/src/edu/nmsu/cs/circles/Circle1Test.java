@@ -68,6 +68,14 @@ public class Circle1Test
 		Assert.assertFalse(a.intersects(b));
 		Assert.assertFalse(b.intersects(a));
 		
+		// circle is inside the other circle
+		System.out.println("intersectNoIntersection - circle a is inside circle b");
+		a = new Circle1(0, 0, 2);
+		b = new Circle1(0, 0, 5);
+		
+		Assert.assertFalse(a.intersects(b));
+		Assert.assertFalse(b.intersects(a));
+		
 	} // end noIntersection
 	
 	//
@@ -88,7 +96,7 @@ public class Circle1Test
 	}
 	
 	//
-	// Tests two circles that are intersecting at a single point are intersecting
+	// Tests two circles that are intersecting at a single point
 	//
 	@Test
 	public void intersectAtOnePoint() {
@@ -99,6 +107,23 @@ public class Circle1Test
 		System.out.println("intersectAtOnePoint - on x-axis");
 		Circle1 a = new Circle1(0, 0, 3);
 		Circle1 b = new Circle1(5, 0, 2);
+		
+		Assert.assertTrue(a.intersects(b));
+		Assert.assertTrue(b.intersects(a));
+	}
+	
+	//
+	// Tests two circles that are intersecting at two points
+	//
+	@Test
+	public void intersectAtTwoPoints() {
+		
+		System.out.println("Running test: intersectAtTwoPoints.");
+		
+		// next to eachother same x
+		System.out.println("intersectAtTwoPoints - on x-axis");
+		Circle1 a = new Circle1(2, 0, 1);
+		Circle1 b = new Circle1(4, 0, 2);
 		
 		Assert.assertTrue(a.intersects(b));
 		Assert.assertTrue(b.intersects(a));

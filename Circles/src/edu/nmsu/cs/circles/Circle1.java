@@ -16,6 +16,27 @@ public class Circle1 extends Circle
 		// sum of the radii
 		double radSum = this.radius + other.radius;
 		
+		// this.circle is inside of the other circle, but they're touching at a point
+		// and vice-versa
+		if (dist + this.radius == other.radius) {
+			return true;
+		}
+		
+		if (dist + other.radius == this.radius) {
+			return true;
+		}
+		
+		// this.circle is inside of the other circle, but they're not intersecting
+		// and vice-versa
+		if (dist + this.radius < other.radius) {
+			return false;
+		}
+		
+		if (dist + other.radius < this.radius) {
+			return false;
+		}
+		
+		// normal case
 		if (dist <= radSum) {
 			return true;
 		}
