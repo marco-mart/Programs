@@ -37,6 +37,8 @@ public abstract class Circle
 	 **/
 	public double scale(double factor)
 	{
+		
+		// RADIUS SHOULD BE MULTIPLIES BY FACTOR
 		radius = radius + factor;
 		return radius;
 	}
@@ -53,8 +55,9 @@ public abstract class Circle
 	public Point moveBy(double xOffset, double yOffset)
 	{
 		
+		// CENTER.Y SHOULD BE OFFSET BY YOFFSET NOT XOFFSET
 		center.x = center.x + xOffset;
-		center.y = center.y + yOffset;
+		center.y = center.y + xOffset;
 		return center;
 	}
 
