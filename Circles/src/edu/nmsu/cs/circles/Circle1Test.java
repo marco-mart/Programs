@@ -73,6 +73,11 @@ public class Circle1Test
 		a = new Circle1(0, 0, 2);
 		b = new Circle1(0, 0, 5);
 		
+		// circle is inside the other circle
+		System.out.println("intersectNoIntersection - circle b is inside circle a");
+		a = new Circle1(0, 0, 5);
+		b = new Circle1(0, 0, 2);
+		
 		Assert.assertFalse(a.intersects(b));
 		Assert.assertFalse(b.intersects(a));
 		
