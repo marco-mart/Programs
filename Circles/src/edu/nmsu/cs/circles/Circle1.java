@@ -11,11 +11,15 @@ public class Circle1 extends Circle
 	public boolean intersects(Circle other)
 	{
 		
-		// ONLY CONSIDERING ONE OF THE CIRCLES RADII
-		// NEED TO CONSIDER THE OTHER CIRCLES AS WELL
-		if (Math.abs(center.x - other.center.x) < radius &&
-				Math.abs(center.y - other.center.y) < radius)
+		// distance between the two centers
+		double dist = Math.sqrt((Math.pow(this.center.x - other.center.x, 2)) + (Math.pow(this.center.y - other.center.y, 2)));
+		// sum of the radii
+		double radSum = this.radius + other.radius;
+		
+		if (dist <= radSum) {
 			return true;
+		}
+		
 		return false;
 	}
 

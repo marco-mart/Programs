@@ -71,7 +71,7 @@ public class Circle1Test
 	} // end noIntersection
 	
 	//
-	// Tests that two circles that are comepletely overlapping are intersecting
+	// Tests that two circles that are completely overlapping are intersecting
 	//
 	@Test
 	public void intersectCompleteOverlap() {
@@ -80,8 +80,8 @@ public class Circle1Test
 		
 		// next to eachother same x
 		System.out.println("intersectCompleteOverlap - at origin");
-		Circle1 a = new Circle1(0, 0, 3);
-		Circle1 b = new Circle1(7, 0, 4);
+		Circle1 a = new Circle1(0, 0, 4);
+		Circle1 b = new Circle1(0, 0, 4);
 		
 		Assert.assertTrue(a.intersects(b));
 		Assert.assertTrue(b.intersects(a));
@@ -98,7 +98,7 @@ public class Circle1Test
 		// next to eachother same x
 		System.out.println("intersectAtOnePoint - on x-axis");
 		Circle1 a = new Circle1(0, 0, 3);
-		Circle1 b = new Circle1(0, 0, 5);
+		Circle1 b = new Circle1(5, 0, 2);
 		
 		Assert.assertTrue(a.intersects(b));
 		Assert.assertTrue(b.intersects(a));
