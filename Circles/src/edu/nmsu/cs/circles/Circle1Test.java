@@ -84,7 +84,7 @@ public class Circle1Test
 	} // end noIntersection
 	
 	//
-	// Tests that two circles that are completely overlapping are intersecting
+	// Tests two circles that are completly overlapping
 	//
 	@Test
 	public void intersectCompleteOverlap() {
@@ -108,7 +108,7 @@ public class Circle1Test
 		
 		System.out.println("Running test: intersectAtOnePoint.");
 		
-		// next to eachother same x
+		// next to each other same x
 		System.out.println("intersectAtOnePoint - on x-axis");
 		Circle1 a = new Circle1(0, 0, 3);
 		Circle1 b = new Circle1(5, 0, 2);
@@ -132,6 +132,42 @@ public class Circle1Test
 		
 		Assert.assertTrue(a.intersects(b));
 		Assert.assertTrue(b.intersects(a));
+	}
+	
+	//
+	// Tests scaling a circle to a bigger circle
+	//
+	@Test
+	public void scaleBigger() {
+		
+		System.out.println("Running test: scaleBigger.");
+		
+		// next to eachother same x
+		System.out.println("scaleBigger - x 2.0");
+		
+		circle1 = new Circle1(1, 1, 1);
+		
+		circle1.scale(2.0);
+		
+		Assert.assertTrue(circle1.radius == 2.0);
+	}
+	
+	//
+	// Tests scaling a circle to a smaller circle
+	//
+	@Test
+	public void scaleSmaller() {
+		
+		System.out.println("Running test: scaleSmaller.");
+		
+		// next to eachother same x
+		System.out.println("scaleSmaller - x 0.5");
+		
+		circle1 = new Circle1(1, 1, 1);
+		
+		circle1.scale(0.5);
+		
+		Assert.assertTrue(circle1.radius == 0.5);
 	}
 	
 	//
